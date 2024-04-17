@@ -1,0 +1,233 @@
+// defines button class
+var Button = function(x, y, width, height, label) {
+    this.x = x;
+    this.y = y;
+    this.width = width;
+    this.height = height;
+    this.label = label;
+};
+
+// draw method for button class
+Button.prototype.draw = function() {
+    fill(255, 0, 0);
+    rect(this.x, this.y, this.width, this.height, 10);
+    fill(0, 0, 0);
+    textSize(15);
+    textAlign(CENTER, CENTER);
+    text(this.label, this.x + this.width / 2, this.y + this.height / 2);
+};
+
+// creates start button
+var startButton = new Button(150, 280, 100, 50, "Start Game");
+
+// variable to track if the game has started
+var gameStarted = false;
+
+// creates buttons for rock, paper, scissors
+var rockButton = new Button(25, 300, 100, 50, "Rock");
+var paperButton = new Button(150, 300, 100, 50, "Paper");
+var scissorsButton = new Button(275, 300, 100, 50, "Scissors");
+
+// variable stores player's choice
+var playerChoice = "";
+// variable stores CPU choice
+var cpuChoice = "";
+// variable stores game outcome
+var gameOutcome = "";
+
+// function for random CPU choice
+var getCpuChoice = function() {
+    var choices = ["Rock", "Paper", "Scissors"]; //array with choices
+    var randomIndex = floor(random(choices.length));
+    return choices[randomIndex]; //chooses one randomly
+};
+
+// function to determine winner
+var determineWinner = function(playerChoice, cpuChoice) {
+    if (playerChoice === cpuChoice) {
+        return "It's a Tie!";
+    } else if (
+        (playerChoice === "Rock" && cpuChoice === "Scissors") || 
+        (playerChoice === "Paper" && cpuChoice === "Rock") ||
+        (playerChoice === "Scissors" && cpuChoice === "Paper")
+    ) {
+        return "You Win!";
+    } else {
+        return "You Lose!";
+    }
+};
+
+// variable tracks player's and CPU's score
+var playerScore = 0;
+var cpuScore = 0;
+
+// function updates / displays score
+var updateScores = function(outcome) {
+    if (outcome === "You Win!") {
+        playerScore++;
+    } else if (outcome === "You Lose!") {
+        cpuScore++;
+    }
+    fill(0, 0, 0);
+    textSize(20);
+    text("Your Score: " + playerScore, 70, 20);
+    text("CPU's Score: " + cpuScore, 310, 20);
+};
+
+// main function that draws the game
+var drawGame = function() {
+    background(252, 161, 161);
+    
+    //loop to draw dots on game screen
+    fill(174, 130, 232);
+    for (var i = 30; i < width; i += 100) {
+        for (var j = 25; j < height; j += 115) {
+            image(getImage("cute/Rock"), i, j, 30, 30);
+        }
+    }
+    
+    fill(255, 255, 255);
+    textSize(30);
+    textAlign(CENTER, CENTER);
+    text("Rock Paper Scissors", 200, 80);
+    // draws buttons
+    rockButton.draw();
+    paperButton.draw();
+    scissorsButton.draw();
+    textFont(createFont("Arial Bold"), 35); //make bold text
+    // display player's choice
+    textSize(20);
+    text("Your Choice: " + playerChoice, 200, 150);
+    // display CPU's choice
+    text("CPU's Choice: " + cpuChoice, 200, 200);
+    // display outcome
+    text("Result: " + gameOutcome, 200, 250);
+    // update and show score
+    updateScores(gameOutcome);
+};
+
+// mouse clicked function for selecting choice
+mouseClicked = function() {
+    if (!gameStarted) {
+        if (mouseX > startButton.x && mouseX < startButton.x + startButton.width &&
+            mouseY > startButton.y && mouseY < startButton.y + startButton.height) {
+            gameStarted = true;
+            drawGame(); // draw the game after clicking start
+        }
+    } else { // checks if mouse is clicked on rock, paper, or sicssor buttons
+        if (mouseY > rockButton.y && mouseY < rockButton.y + rockButton.height) {
+            if (mouseX > rockButton.x && mouseX < rockButton.x + rockButton.width) {
+                playerChoice = "Rock";
+                cpuChoice = getCpuChoice();
+                gameOutcome = determineWinner(playerChoice, cpuChoice);
+                drawGame();
+            } else if (mouseX > paperButton.x && mouseX < paperButton.x + paperButton.width) {
+                playerChoice = "Paper";
+                cpuChoice = getCpuChoice();
+                gameOutcome = determineWinner(playerChoice, cpuChoice);
+                drawGame();
+            } else if (mouseX > scissorsButton.x && mouseX < scissorsButton.x + scissorsButton.width) {
+                playerChoice = "Scissors";
+                cpuChoice = getCpuChoice();
+                gameOutcome = determineWinner(playerChoice, cpuChoice);
+                drawGame();
+            }
+        }
+    }
+};
+
+// draw bitmoji function
+var drawBitmojiHead = function(x, y, bitmojiHeight) {
+        noStroke();
+        fill(255, 225, 190);
+        quad(x-(bitmojiHeight / 100*1), y+(bitmojiHeight / 100*28), x-(bitmojiHeight/ 100*19), y-(bitmojiHeight / 100*14), x-(bitmojiHeight / 100*33), y-(bitmojiHeight / 100*6), x-(bitmojiHeight / 100*47), y+(bitmojiHeight / 100*34));//neck
+        fill(255, 225, 190);
+        ellipse(x-(bitmojiHeight / 100*25), y-(bitmojiHeight/100*27.5), (bitmojiHeight/100*52), (bitmojiHeight/100*62)); //face
+        fill(139, 69, 19);
+        arc(x-(bitmojiHeight/100*25), y-(bitmojiHeight/100*40), (bitmojiHeight/100*59), (bitmojiHeight/100*25),183,365);//hair
+        fill(0, 0, 0);
+        arc(x-(bitmojiHeight/100*25), y-(bitmojiHeight/100*39), (bitmojiHeight/100*53),(bitmojiHeight/100*85), 183, 360);//bottom hat
+        fill(255, 255, 255);
+        ellipse(x-(bitmojiHeight/100*25), y-(bitmojiHeight/100*48.6), (bitmojiHeight/100*17), (bitmojiHeight/100*16));//B
+        fill(230, 230, 25);
+        ellipse(x-(bitmojiHeight/100*24.5), y-(bitmojiHeight/100*84.5), (bitmojiHeight/100*30), (bitmojiHeight/100*27));//hat pom
+        textSize((bitmojiHeight/100*15));
+        text("B",x-(bitmojiHeight/100*31), y-(bitmojiHeight/100*54), (bitmojiHeight/100*88), (bitmojiHeight/100*56));
+        fill(139, 69, 19);
+        ellipse(x-(bitmojiHeight/100*34), y-(bitmojiHeight/100*27.5), (bitmojiHeight/100*13), (bitmojiHeight/100*8.5));//eye
+        ellipse(x-(bitmojiHeight/100*16), y-(bitmojiHeight/100*27.5), (bitmojiHeight/100*13), (bitmojiHeight/100*8.5));//eye
+        stroke(139,69,19);
+        strokeWeight(2);
+        line(x-(bitmojiHeight/100*29), y-(bitmojiHeight/100*33), x-(bitmojiHeight/100*39), y-(bitmojiHeight/100*33));//eyebrow
+        line(x-(bitmojiHeight/100*21), y-(bitmojiHeight/100*33), x-(bitmojiHeight/100*10), y-(bitmojiHeight/100*32));//eyebrow
+        fill(0, 0, 0);
+        strokeWeight(0.5);
+        stroke(0, 0, 0);
+        ellipse(x-(bitmojiHeight/100*34), y-(bitmojiHeight/100*26), 3, 3);//eye
+        ellipse(x-(bitmojiHeight/100*16), y-(bitmojiHeight/100*26), 3, 3);//eye
+        noFill();
+        stroke(0, 0, 0);
+        line(x-(bitmojiHeight/100*25), y-(bitmojiHeight/100*27.5), x-(bitmojiHeight/100*21), y-(bitmojiHeight/100*20));//nose
+        arc(x-(bitmojiHeight/100*26), y-(bitmojiHeight/100*20), (bitmojiHeight/100*8), (bitmojiHeight/100*6), -1, 128);//nose
+        fill(255, 255, 255);
+        stroke(255, 200, 200);
+        strokeWeight(3.5);
+        arc(x-(bitmojiHeight/100*25), y-(bitmojiHeight/100*9), (bitmojiHeight/100*17), (bitmojiHeight/100*6),0,180);//mouth
+        line(x-(bitmojiHeight/100*30), y-(bitmojiHeight/100*10), x-(bitmojiHeight/100*20), y-(bitmojiHeight/100*10));//mouth
+    };
+
+var drawBitmojiBody = function(x, y, bitmojiHeight) {
+    stroke(0, 0, 0);
+        strokeWeight(0.5);
+        quad(x+(bitmojiHeight/100*19), y+(bitmojiHeight/100*40), x+(bitmojiHeight/100*5), y+(bitmojiHeight/100*13), x-(bitmojiHeight/100*52), y+(bitmojiHeight/100*13), x-(bitmojiHeight/100*64), y+(bitmojiHeight/100*40));//shirt
+        rect(x-(bitmojiHeight/100*63), y+(bitmojiHeight/100*41), (bitmojiHeight/100*82), (bitmojiHeight/100*60));//shirt
+        noStroke();
+        fill(255, 225, 190);
+        ellipse(x-(bitmojiHeight/100*89), y+(bitmojiHeight/100*74.8), (bitmojiHeight/100*30), (bitmojiHeight/100*17.5));//hand
+        ellipse(x+(bitmojiHeight/100*50), y+(bitmojiHeight/100*74.8), (bitmojiHeight/100*30), (bitmojiHeight/100*17.5));//hand
+        stroke(255, 255, 255);
+        strokeWeight(15);
+        line(x-(bitmojiHeight/100*62), y+(bitmojiHeight/100*41), x-(bitmojiHeight/100*81), y+(bitmojiHeight/100*71));//shirt arm
+        line(x+(bitmojiHeight/100*19), y+(bitmojiHeight/100*41), x+(bitmojiHeight/100*41), y+(bitmojiHeight/100*71));//shirt arm
+        line(x-(bitmojiHeight/100*60), y+(bitmojiHeight/100*41), x+(bitmojiHeight/100*17), y+(bitmojiHeight/100*41));//shirt
+        fill(0, 0, 0);
+        textSize((bitmojiHeight/100*20));
+        text("CF",x-(bitmojiHeight/100*37), y+(bitmojiHeight/100*31), x-(bitmojiHeight/100*25), y-(bitmojiHeight/100*10));//Initials
+        noStroke();
+        fill(195, 170, 170);
+        arc(x+(bitmojiHeight/100*14), y+(bitmojiHeight/100*83), (bitmojiHeight/100*29), (bitmojiHeight/100*53),-73,93);
+        arc(x-(bitmojiHeight/100*53), y+(bitmojiHeight/100*83), (bitmojiHeight/100*31), (bitmojiHeight/100*67),77,236);
+};
+
+//bitmoji function
+var drawBitmoji = function(x, y, bitmojiHeight) {
+    drawBitmojiHead(x, y, bitmojiHeight);
+    drawBitmojiBody(x, y, bitmojiHeight);
+}; 
+
+//splash screen function
+var drawSplash = function() {
+    background(245, 208, 208);
+    fill(195, 170, 170);
+    rect(21,214,116,141);
+    drawBitmoji(92, 282, 60); //bitmoji
+    fill(0);
+    textSize(23);
+    fill(91, 36, 255);
+    textAlign(CENTER, CENTER);
+    text("Welcome to Rock Paper Scissors!", 200, 50);
+    textSize(20);
+    fill(0, 0, 0);
+    text("Choose to play either Rock, Paper, or Scissors. If your choice beats the CPU you gain a point, if you tie no points are awarded, if you lose the CPU gains a point. Try to get more points!", 12, 41, 384, 181); // rules
+    //draws start button
+    startButton.draw();
+};
+
+// calls game screens
+if (!gameStarted) {
+    // splash screen
+    drawSplash();
+} else {
+    // game screen
+    drawGame();
+}
